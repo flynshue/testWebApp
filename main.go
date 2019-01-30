@@ -9,17 +9,25 @@ import (
 
 var homeView *views.View
 
-type data struct {
+var myenv *envvars
+
+type envvars struct {
 	User     string
 	Hostname string
 }
 
-func home(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
+func newEnvVars() *envvars {
 	hostname := os.Getenv("HOSTNAME")
 	username := os.Getenv("USER")
-	myData := data{User: username, Hostname: hostname}
-	err := homeView.Template.ExecuteTemplate(w, homeView.Layout, myData)
+	return &envvars{
+		User: username,
+		Hostname: hostname,
+	}
+}
+
+func home(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	err := homeView.Template.ExecuteTemplate(w, homeView.Layout, myenv)
 	if err != nil {
 		panic(err)
 	}
@@ -27,6 +35,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	homeView = views.NewView("bootstrap", "views/home.gohtml")
+	myenv = newEnvVars()
 	r := mux.NewRouter()
 	r.HandleFunc("/", home)
 	http.ListenAndServe(":3000", r)
