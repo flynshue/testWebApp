@@ -3,7 +3,7 @@ FROM golang:1.9 AS builder
 ENV DEP_URL="https://github.com/golang/dep/releases/download/v0.5.0/dep-linux-amd64"
 ENV GOPATH=/go
 EXPOSE 3000/tcp
-COPY main.go views Gopkg.toml /go/src/github.com/flynshuePersonal/testWebApp/
+COPY src/ /go/src/github.com/flynshuePersonal/testWebApp/
 
 WORKDIR /go/src/github.com/flynshuePersonal/testWebApp
 
